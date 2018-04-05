@@ -9,9 +9,9 @@ import { StyledLink } from './components/StyledLink';
 const _Container = ({ children }) => {
   return (
     <Nav>
-      <NavItem active><StyledLink to="/">Shop</StyledLink></NavItem>
-      <NavItem><StyledLink to="/dashboard">Cart</StyledLink></NavItem>
-      <NavItem><StyledLink to="/contact">Checkout</StyledLink></NavItem>
+      <StyledLink to="/">Shop</StyledLink>
+      <StyledLink to="/dashboard">Cart</StyledLink>
+      <StyledLink to="/contact">Checkout</StyledLink>
     </Nav>
   )
 }

@@ -9,52 +9,27 @@ import createHistory from 'history/createBrowserHistory';
 import { AddShoppingCart, IndeterminateCheckBox } from 'material-ui-icons';
 
 // internal imports
-//>> images
-import imgCabbage from '../../assets/cabbage.jpg';
-import imgCarrots from '../../assets/carrots.jpg';
-import imgCucumbers from '../../assets/cucumbers.jpg';
-//>> components
 import { Container, Content, Footer, Header, Row } from './components/wrapper';
 import { Product, ProductImage, ProductName, ProductQuantity, ProductPrice  } from './components/product';
 import { Button } from './components/Button';
 
 // declarations
-const images = [imgCabbage, imgCarrots, imgCucumbers];
 const history = createHistory();
-
-// dummy list -> should be retrieved from a database
-const itemsList = [
-  {
-    id: 0,
-    name: 'Cabbages',
-    isSelected: false,
-    price: 2.99,
-    currency: '€',
-    quantity: 0
-  },
-  {
-    id: 1,
-    name: 'Carottes',
-    isSelected: false,
-    price: 1.99,
-    currency: '€',
-    quantity: 0
-  },
-  {
-    id: 2,
-    name: 'Cucumbers',
-    isSelected: false,
-    price: 0.99,
-    currency: '€',
-    quantity: 0
-  }
-];
 
 // declarations
 // @todo: temp. workaround
 let init = true;
 
-const _Container = ({items, storageItems, setSelectedItemsHandler, setQuantityHandler, addItemHandler, removeItemsHandler}) => {
+const _Container = ({
+  addItemHandler, 
+  images, 
+  items, 
+  removeItemsHandler,
+  setQuantityHandler, 
+  setSelectedItemsHandler, 
+  storageItems, 
+  title,
+}) => {
 
   if(init && storageItems) {
     for(let i = 0; i < items.length; i++) {
@@ -70,13 +45,13 @@ const _Container = ({items, storageItems, setSelectedItemsHandler, setQuantityHa
   
   return (
     <Container>
-      <Header>Vegetables</Header>
+      <Header>{title}</Header>
       <Content>
        {
          items && items.map(item => {
            return (
             <Product shop key={item.id}>
-              <ProductImage src={images[item.id]} />
+              <ProductImage src={item.img} />
               <ProductName>{item.name}</ProductName>
               <Row>
                 <ProductPrice shop>{item.price} {item.currency}</ProductPrice>
@@ -129,7 +104,7 @@ export const Shop = compose(
     })
   ),
 
-  withState('items', 'setSelectedItems', itemsList),
+  withState('items', 'setSelectedItems', ({ itemssource }) => itemssource),
   withState('quantity', 'setQuantity', 0),
 
   withHandlers({
