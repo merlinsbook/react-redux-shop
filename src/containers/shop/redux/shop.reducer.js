@@ -32,7 +32,7 @@ export default (state = initialState, action) => {
       items = state.get('items').toJS();
       items = items.map(item => {
         if(parseInt(action.payload.id) === item.id) {
-          item.quantity = parseInt(action.payload.quantity);
+          item.quantity = action.payload.quantity;
         }
         return item;
       })

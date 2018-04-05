@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose, pure, withState, withHandlers } from 'recompose';
 import styled, { css } from 'styled-components';
-
 import { addItem, removeItem, checkout } from './redux/shop.actions';
-
 import createHistory from 'history/createBrowserHistory';
 import { AddShoppingCart, IndeterminateCheckBox } from 'material-ui-icons';
 
@@ -55,30 +53,28 @@ const _Container = ({
               <ProductName>{item.name}</ProductName>
               <Row>
                 <ProductPrice shop>{item.price} {item.currency}</ProductPrice>
-                {
-                  item.isSelected === false ?
-                  <Row>
-                    <ProductQuantity shop min={0} id={item.id} type="number" step={1} value={item.quantity} onChange={setQuantityHandler} />
-                    <Button onClick={() => {
+                <Row>
+                  <ProductQuantity shop min={0} id={item.id} type="number" step={1} value={item.quantity} onChange={setQuantityHandler} />
+                  <Button 
+                    disabled={(item.quantity === 0)}
+                    onClick={() => {
+                        if(!item.isSelected) {
+                          addItemHandler(item);
+                        } else {
+                          removeItemsHandler(item);
+                        }
                         setSelectedItemsHandler(item.id);
-                        addItemHandler(item);
                       }
-                    }>
+                    }
+                  >
+                    { 
+                      !item.isSelected ?
                       <AddShoppingCart />
-                    </Button>
-                  </Row>
-                  :
-                  <Row>
-                    <ProductQuantity shop min={0} id={item.id} type="number" step={1} value={item.quantity} onChange={setQuantityHandler}/>
-                    <Button onClick={() => {
-                        removeItemsHandler(item);
-                        setSelectedItemsHandler(item.id);
-                      }
-                    }>
-                    <IndeterminateCheckBox />
-                    </Button>
-                  </Row>                  
-                }
+                      :
+                      <IndeterminateCheckBox />
+                    }
+                  </Button>
+                </Row>
               </Row>
             </Product>
            )

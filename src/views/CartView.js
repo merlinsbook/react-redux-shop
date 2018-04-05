@@ -5,7 +5,7 @@ import { Cart, View } from '../config/lib';
 export const CartView = ({}) => {
   return (
     <View>
-      <Cart />
+      <Cart title={'Selected Articles'} />
     </View>
   )
 }

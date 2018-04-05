@@ -5,6 +5,7 @@ import StripeCheckout from 'react-stripe-checkout';
 import { STRIPE_API_KEY } from '../../config/lib';
 
 export const CheckoutForm = ({}) => {
+  
   const onToken = (token) => {
     fetch('/save-stripe-token', {
       method: 'POST',

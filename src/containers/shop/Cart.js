@@ -7,39 +7,33 @@ import { AddShoppingCart, IndeterminateCheckBox } from 'material-ui-icons';
 
 // internal imports
 import { addItem, setItemsQuantity, removeItem } from './redux/shop.actions';
-import { CheckoutForm } from '../../config/lib';
-import imgCabbage from '../../assets/cabbage.jpg';
-import imgCarrots from '../../assets/carrots.jpg';
-import imgCucumbers from '../../assets/cucumbers.jpg';
 import { Container, Content, Footer, Header, Row } from './components/wrapper';
 import { Product, ProductImage, ProductName, ProductQuantity, ProductPrice, ProductTotal  } from './components/product';
 import { Button } from './components/Button';
+import { CheckoutForm } from '../../config/lib';
 
 // declarations
-const images = [imgCabbage, imgCarrots, imgCucumbers, imgCabbage];
 const history = createHistory();
 
-const _Container = ({items, removeItemsHandler, setQuantityHandler}) => {
+const _Container = ({title, items, removeItemsHandler, setQuantityHandler}) => {
   return (
     <Container>
-      <Header>Selected Articles</Header>
+      <Header>{title}</Header>
       <Content cart>
        {
          items && items.map(item => {
            return (
             <Product cart key={item.id}>
             <Row>
-              <ProductImage style={{width: 40, height: 40}} src={images[item.id]} />
+              <ProductImage style={{width: 40, height: 40}} src={item.img} />
               <ProductName>{item.name}</ProductName>
               </Row>
               <Row>
                 <ProductQuantity cart id={item.id} type="number" step={1} value={item.quantity || 0} onChange={setQuantityHandler} />
                 <ProductPrice cart> / {item.price} {item.currency}</ProductPrice>
-                <ProductTotal>{(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)} {item.currency}</ProductTotal>
-                <Button onClick={() => {
-                    removeItemsHandler(item)
-                  }}>
-                   <IndeterminateCheckBox />
+                <ProductTotal>{(item.price * item.quantity).toFixed(2)} {item.currency}</ProductTotal>
+                <Button onClick={() => removeItemsHandler(item) }>
+                  <IndeterminateCheckBox />
                 </Button>
               </Row>
             </Product>
@@ -47,10 +41,7 @@ const _Container = ({items, removeItemsHandler, setQuantityHandler}) => {
          })
        }
       </Content>
-      <Footer> 
-      
-      <CheckoutForm />
-      </Footer>     
+      <Footer><CheckoutForm /></Footer>     
     </Container>
   );
 }
@@ -72,7 +63,6 @@ export const Cart = compose(
   withHandlers({
 
     setQuantityHandler: ({setItemsQuantity}) => ({target}) => {
-      console.log(target.id, target.value)
       setItemsQuantity(target.id, target.value);
     },
     

@@ -6,12 +6,11 @@ import styled, { css } from 'styled-components';
 import { Nav, NavItem } from './components/navigation';
 import { StyledLink } from './components/StyledLink';
 
-const _Container = ({ children }) => {
+const _Container = ({}) => {
   return (
     <Nav>
       <StyledLink to="/">Shop</StyledLink>
       <StyledLink to="/dashboard">Cart</StyledLink>
-      <StyledLink to="/contact">Checkout</StyledLink>
     </Nav>
   )
 }
