@@ -1,27 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose, pure, withState, withHandlers } from 'recompose';
+import { compose, lifecycle, pure, withState, withHandlers } from 'recompose';
 import styled, { css } from 'styled-components';
-import { addItem, removeItem, checkout } from './redux/shop.actions';
-import createHistory from 'history/createBrowserHistory';
 import { AddShoppingCart, IndeterminateCheckBox } from 'material-ui-icons';
 
 // internal imports
+import { addItem, removeItem, setSelectedItems, setShopItemsQuantity } from './redux/shop.actions';
 import { Container, Content, Footer, Header, Row } from './components/wrapper';
 import { Product, ProductImage, ProductName, ProductQuantity, ProductPrice  } from './components/product';
 import { Button } from './components/Button';
 
-// declarations
-const history = createHistory();
-
-// declarations
-// @todo: temp. workaround
-let init = true;
-
 const _Container = ({
   addItemHandler, 
-  images, 
-  items, 
+  shopItems, 
   removeItemsHandler,
   setQuantityHandler, 
   setSelectedItemsHandler, 
@@ -29,24 +20,12 @@ const _Container = ({
   title,
 }) => {
 
-  if(init && storageItems) {
-    for(let i = 0; i < items.length; i++) {
-      for(let j = 0; j < storageItems.length; j++) {
-        if(items[i].id === storageItems[j].id) {
-          items[i].isSelected = storageItems[j].isSelected;
-          items[i].quantity = storageItems[j].quantity;
-        }
-      }
-    }
-    init = false;
-  }
-  
   return (
     <Container>
       <Header>{title}</Header>
       <Content>
        {
-         items && items.map(item => {
+         shopItems && shopItems.map(item => {
            return (
             <Product shop key={item.id}>
               <ProductImage src={item.img} />
@@ -92,35 +71,32 @@ export const Shop = compose(
 
   connect(
     state => ({
+      shopItems: state.shop.get('shopItems').toJS(),
       storageItems: state.shop.get('items').toJS(),
     }),
     dispatch => ({
       addItem: item => dispatch(addItem(item)),
       removeItem: item => dispatch(removeItem(item)),
+      setSelectedItems: (id) => dispatch(setSelectedItems(id)),
+      setShopItemsQuantity: (id, value) => dispatch(setShopItemsQuantity(id, value)),
     })
   ),
 
-  withState('items', 'setSelectedItems', ({ itemssource }) => itemssource),
-  withState('quantity', 'setQuantity', 0),
-
   withHandlers({
 
-    setQuantityHandler: ({ items, setQuantity }) => ({target}) => {     
-      items[target.id].quantity = parseInt(target.value);
-      setQuantity(items = [...items]);
+    setQuantityHandler: ({ setShopItemsQuantity }) => ({target}) => {     
+      setShopItemsQuantity(target.id, parseInt(target.value));
     },
 
-    setSelectedItemsHandler: ({ items, setSelectedItems }) => (id) => {
-      items[id].isSelected = !(items[id].isSelected);
-      if(!items[id].isSelected) items[id].quantity = 0;
-      setSelectedItems(items = [...items]);
+    setSelectedItemsHandler: ({ setSelectedItems }) => (id) => {
+      setSelectedItems(id);
     },
 
     addItemHandler: ({ addItem }) => (item) => {
       addItem(item);
     },
 
-    removeItemsHandler: ({ removeItem }) => (item) => {
+    removeItemsHandler: ({ removeItem, setShopItemsQuantity }) => (item) => {
       removeItem(item);
     }
   }),

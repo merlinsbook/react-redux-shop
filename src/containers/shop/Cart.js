@@ -6,7 +6,7 @@ import createHistory from 'history/createBrowserHistory';
 import { AddShoppingCart, IndeterminateCheckBox } from 'material-ui-icons';
 
 // internal imports
-import { addItem, setItemsQuantity, removeItem } from './redux/shop.actions';
+import { addItem, removeItem, setItemsQuantity, setSelectedItems, setShopItemsQuantity } from './redux/shop.actions';
 import { Container, Content, Footer, Header, Row } from './components/wrapper';
 import { Product, ProductImage, ProductName, ProductQuantity, ProductPrice, ProductTotal  } from './components/product';
 import { Button } from './components/Button';
@@ -55,6 +55,8 @@ export const Cart = compose(
     dispatch => ({
       removeItem: id => dispatch(removeItem(id)),
       setItemsQuantity: (id, value) => dispatch(setItemsQuantity(id, value)),
+      setSelectedItems: (id) => dispatch(setSelectedItems(id)),
+      setShopItemsQuantity: (id, value) => dispatch(setShopItemsQuantity(id, value)),
     })
   ),
 
@@ -63,11 +65,13 @@ export const Cart = compose(
   withHandlers({
 
     setQuantityHandler: ({setItemsQuantity}) => ({target}) => {
-      setItemsQuantity(target.id, target.value);
+      setItemsQuantity(target.id, parseInt(target.value));
     },
     
-    removeItemsHandler: ({ removeItem }) => (item) => {
+    removeItemsHandler: ({ removeItem, setSelectedItems, setShopItemsQuantity }) => (item) => {
       removeItem(item);
+      setShopItemsQuantity(item.id, 0);
+      setSelectedItems(item.id);
     }
 
   }),

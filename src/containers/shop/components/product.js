@@ -61,6 +61,6 @@ export const ProductTotal = styled.p`
   font-size: 22px;
   color: #2CA58D;
   margin: 0 5px;
-  width: 120px;
+  width: 180px;
   text-align: right;
 `;
