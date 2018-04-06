@@ -1,5 +1,5 @@
 /**
- *  GET A PUBLISHABLE API KEY BY SIGNING UP
+ *  GET A PUBLISHABLE API KEY AND REPLACE THE STRING BELOW TO GET STRIPE TO WORK.
  *  @see https://stripe.com/
  */
 export const STRIPE_API_KEY = 'your_stripe_api_key_here';
